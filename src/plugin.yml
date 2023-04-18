@@ -1,0 +1,24 @@
+name: CraftingRecipes # the plugins name as it should appear in the plugin list /pl
+version: 1.1.1 # the plugin's version
+main: com.codbellamy.crafting.Main
+api-version: 1.19 # the version of the API you want to use, required starting with 1.13
+permissions:
+  cr.*:
+    description: Gives access to all CraftingRecipe permissions
+    children:
+      cr.craft.*: true
+      cr.mine: true
+      cr.exp: false
+  cr.craft.*:
+    description: Gives a player permission to all crafting recipes
+    children:
+      cr.craft.egg: true
+      cr.craft.spawner: true
+  cr.craft.egg:
+    description: Gives a player permission to craft eggs
+  cr.craft.spawner:
+    description: Gives a player permission to craft a blank spawner
+  cr.mine:
+    description: Gives a player permission to mine spawners with silk touch
+  cr.exp:
+    description: 1.5x xp multiplier
