@@ -8,11 +8,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+@SuppressWarnings({"ConstantValue", "DataFlowIssue"})
 public class PluginListener implements Listener {
 
     @EventHandler
@@ -24,6 +26,7 @@ public class PluginListener implements Listener {
                     ItemStack equipped = e.getPlayer().getInventory().getItemInMainHand();
                     if (equipped.getType() == Material.DIAMOND_PICKAXE ||
                             equipped.getType() == Material.GOLDEN_PICKAXE ||
+                            equipped.getType() == Material.IRON_PICKAXE ||
                             equipped.getType() == Material.NETHERITE_PICKAXE) {
 
                         if (equipped.containsEnchantment(Enchantment.SILK_TOUCH)) {
@@ -36,6 +39,8 @@ public class PluginListener implements Listener {
                             e.getBlock().setType(Material.AIR);
                         }
                     }
+                } else {
+                    e.setCancelled(true);
                 }
             }
         }
@@ -72,19 +77,22 @@ public class PluginListener implements Listener {
     @EventHandler
     public void onExpChangeEvent(PlayerExpChangeEvent e){
         // Eventually, let players with permissions to modify this
-        final float EXP_MULTIPLIER = 1.5f;
+        final int EXP_MULTIPLIER = 2;
 
         if(e.getPlayer().hasPermission("cr.exp")){
-            e.setAmount((int)((float)e.getAmount() * EXP_MULTIPLIER));
+            e.setAmount(e.getAmount() * EXP_MULTIPLIER);
         }
     }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e){
+        if(e.getClickedBlock() == null) return;
+        if(e.getClickedBlock().getType() == null) return;
         if(e.getClickedBlock().getType() == Material.SPAWNER){
             if(!e.getPlayer().hasPermission("cr.create")) e.setCancelled(true);
             return;
         }
+        if(e.getItem() == null) return;
         if(isEgg(e.getItem().getType()) && !e.getPlayer().hasPermission("cr.craft.egg")){
             e.setCancelled(true);
         }
@@ -92,12 +100,25 @@ public class PluginListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e){
-        if(e.getCurrentItem().getType() == Material.SPAWNER && !e.getView().getPlayer().hasPermission("cr.craft.spawner")){
-            e.setCancelled(true);
-            return;
-        }
-        if(isEgg(e.getCurrentItem().getType()) && !e.getView().getPlayer().hasPermission("cr.craft.egg")){
-            e.setCancelled(true);
+        if(e.getCurrentItem() == null) return;
+        if(e.getCurrentItem().getType() == null) return;
+        Material item = e.getCurrentItem().getType();
+
+        if (item == Material.SPAWNER || isEgg(item)) {
+            if(!e.getView().getPlayer().hasPermission("cr.craft.egg")){
+                if(e.getClickedInventory().getType() == InventoryType.PLAYER){
+                    e.setCurrentItem(new ItemStack(Material.AIR));
+                } else {
+                    e.setCancelled(true);
+                }
+            }
+            if(!e.getView().getPlayer().hasPermission("cr.craft.spawner")){
+                if(e.getClickedInventory().getType() == InventoryType.PLAYER){
+                    e.setCurrentItem(new ItemStack(Material.AIR));
+                } else {
+                    e.setCancelled(true);
+                }
+            }
         }
     }
 
