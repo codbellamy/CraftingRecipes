@@ -8,9 +8,8 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.event.Listener;
 
-public class Main extends JavaPlugin implements Listener{
+public class Main extends JavaPlugin{
 
     public static final String[] KEYS = {
             "spider_egg",
@@ -25,7 +24,8 @@ public class Main extends JavaPlugin implements Listener{
             "ghast_egg",
             "wither_egg",
             "skeleton_egg",
-            "wither_skeleton_egg"
+            "wither_skeleton_egg",
+            "magma_cube"
     };
     public static final Material[][] CRAFTING = {
             {Material.SPIDER_EYE,               Material.SPIDER_SPAWN_EGG},
@@ -40,7 +40,8 @@ public class Main extends JavaPlugin implements Listener{
             {Material.GHAST_TEAR,               Material.GHAST_SPAWN_EGG},
             {Material.NETHER_STAR,              Material.WITHER_SPAWN_EGG},
             {Material.BONE,                     Material.SKELETON_SPAWN_EGG},
-            {Material.WITHER_SKELETON_SKULL,    Material.WITHER_SKELETON_SPAWN_EGG}
+            {Material.WITHER_SKELETON_SKULL,    Material.WITHER_SKELETON_SPAWN_EGG},
+            {Material.MAGMA_CREAM,              Material.MAGMA_CUBE_SPAWN_EGG}
     };
     @Override
     public void onEnable(){
@@ -84,7 +85,7 @@ public class Main extends JavaPlugin implements Listener{
                     );
 
             egg.setCategory(CraftingBookCategory.MISC);
-            egg.setGroup("spawner");
+            egg.setGroup("spawn_egg");
             egg = egg.addIngredient(1, input)
                     .addIngredient(1, Material.AMETHYST_SHARD)
                     .addIngredient(1, Material.EGG);
