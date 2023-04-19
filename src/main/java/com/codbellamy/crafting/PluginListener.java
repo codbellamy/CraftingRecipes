@@ -6,6 +6,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -40,6 +41,17 @@ public class PluginListener implements Listener {
                         }
                     }
                 } else {
+                    e.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent e){
+        if(e.getBlock().getType() == Material.SPAWNER){
+            if(e.getPlayer().getType() == EntityType.PLAYER){
+                if(!e.getPlayer().hasPermission("cr.craft.spawner")){
                     e.setCancelled(true);
                 }
             }

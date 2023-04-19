@@ -61,7 +61,7 @@ public class Main extends JavaPlugin{
         Bukkit.getLogger().info("[" + this.getName() + "] " + "Loaded spawner recipe.");
 
         // Create shapeless recipes
-        createEggRecipe(KEYS, CRAFTING);
+        createEggRecipe();
         Bukkit.getLogger().info(String.format("[" + this.getName() + "] " + "Loaded %d egg recipes.", KEYS.length));
 
         // Register event handler
@@ -71,16 +71,16 @@ public class Main extends JavaPlugin{
 
     public void onDisable(){}
 
-    public void createEggRecipe(String[] key, Material[][] recipes){
+    public void createEggRecipe(){
         ShapelessRecipe egg;
         Material input, output;
 
-        for (int i = 0; i < key.length; i++){
-            input = recipes[i][0];
-            output = recipes[i][1];
+        for (int i = 0; i < KEYS.length; i++){
+            input = CRAFTING[i][0];
+            output = CRAFTING[i][1];
             egg =
                     new ShapelessRecipe(
-                            new NamespacedKey(this, key[i]),
+                            new NamespacedKey(this, KEYS[i]),
                             new ItemStack(output, 1)
                     );
 
