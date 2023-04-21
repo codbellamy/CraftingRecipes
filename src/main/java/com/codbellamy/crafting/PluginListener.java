@@ -1,10 +1,12 @@
 package com.codbellamy.crafting;
 
 import org.bukkit.Material;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -13,6 +15,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings({"ConstantValue", "DataFlowIssue"})
@@ -45,6 +48,7 @@ public class PluginListener implements Listener {
                 } else {
                     // If they dont have cr.craft.spawner, cancel event
                     // (Players cant destroy spawners)
+                    e.getPlayer().sendMessage("You do not have permission for that.");
                     e.setCancelled(true);
                 }
             }
@@ -57,6 +61,7 @@ public class PluginListener implements Listener {
             if(e.getPlayer().getType() == EntityType.PLAYER){
                 if(!e.getPlayer().hasPermission("cr.craft.spawner")){
                     // Deny players without perms from placing spawners
+                    e.getPlayer().sendMessage("You do not have permission for that.");
                     e.setCancelled(true);
                 }
             }
@@ -65,18 +70,21 @@ public class PluginListener implements Listener {
 
     @EventHandler
     public void onEntityPickupItem(EntityPickupItemEvent e){
-        if(e.getEntity().getType() == EntityType.PLAYER){
+        if(e.getEntity() instanceof org.bukkit.entity.Player p){
             Material item = e.getItem().getItemStack().getType();
-            if(item == Material.SPAWNER && !e.getEntity().hasPermission("cr.craft.spawner")){
+
+            if(item == Material.SPAWNER && !p.hasPermission("cr.craft.spawner")){
                 // Deny players without perms from picking up spawners
+                p.sendMessage("You do not have permission for that.");
                 e.setCancelled(true);
                 return;
             }
-            if(isEgg(item) && !e.getEntity().hasPermission("cr.craft.egg")){
+            if(isEgg(item) && !p.hasPermission("cr.craft.egg")){
                 // Deny players without perms from picking up craftable eggs
                 // Note: players CAN pick up eggs that are not craftable.
                 // Meaning, an egg spawned in (creative, /give, etc) that is not
                 // in the list from this plugin can be picked up
+                p.sendMessage("You do not have permission for that.");
                 e.setCancelled(true);
             }
         }
@@ -90,11 +98,13 @@ public class PluginListener implements Listener {
         if(result == Material.SPAWNER && !e.getView().getPlayer().hasPermission("cr.craft.spawner")){
             // Deny players without perms from crafting spawners
             e.getInventory().setResult(new ItemStack(Material.AIR));
+            e.getView().getPlayer().sendMessage("You do not have permission for that.");
             return;
         }
         if (isEgg(result) && !e.getView().getPlayer().hasPermission("cr.craft.egg")) {
             // Deny players without perms from crafting eggs (with recipes)
             e.getInventory().setResult(new ItemStack(Material.AIR));
+            e.getView().getPlayer().sendMessage("You do not have permission for that.");
         }
     }
 
@@ -113,17 +123,38 @@ public class PluginListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent e){
         if(e.getClickedBlock() == null) return;
         if(e.getClickedBlock().getType() == null) return;
-        if(e.getClickedBlock().getType() == Material.SPAWNER){
-            if(!e.getPlayer().hasPermission("cr.create")){
-                // Deny players without perm from creating a mob spawner with an egg
-                e.setCancelled(true);
-                return;
-            }
-        }
         if(e.getItem() == null) return;
         if(isEgg(e.getItem().getType()) && !e.getPlayer().hasPermission("cr.craft.egg")){
             // Deny players without perm from using spawn eggs (craftable) at all
+            e.getPlayer().sendMessage("You do not have permission for that.");
             e.setCancelled(true);
+            return;
+        }
+        if(e.getClickedBlock().getType() == Material.SPAWNER){
+            if(!e.getPlayer().hasPermission("cr.create")){
+                // Deny players without perm from creating a mob spawner with an egg
+                e.getPlayer().sendMessage("You do not have permission for that.");
+                e.setCancelled(true);
+//                return;
+            }
+            if(e.getHand() == EquipmentSlot.HAND && !isEgg(e.getItem().getType())) {
+                if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    if (e.getPlayer().hasPermission("cr.create")) {
+                        if (!(e.getClickedBlock().getState() instanceof CreatureSpawner cs)) return;
+                        if (cs.getSpawnCount() == 0) {
+                            e.getPlayer().sendMessage("Spawner enabled.");
+                            cs.setSpawnCount(4);
+                        } else {
+                            e.getPlayer().sendMessage("Spawner disabled.");
+                            cs.setSpawnCount(0);
+                        }
+                        cs.update();
+                        e.setCancelled(true);
+                    } else {
+                        e.getPlayer().sendMessage("You do not have permission for that.");
+                    }
+                }
+            }
         }
     }
 
@@ -142,6 +173,7 @@ public class PluginListener implements Listener {
                     // Deny interacting with eggs in chests/containers
                     e.setCancelled(true);
                 }
+                e.getView().getPlayer().sendMessage("You do not have permission for that.");
             }
             if(!e.getView().getPlayer().hasPermission("cr.craft.spawner")){
                 if(e.getClickedInventory().getType() == InventoryType.PLAYER){
@@ -151,6 +183,7 @@ public class PluginListener implements Listener {
                     // Deny interacting with spawners in chests/containers
                     e.setCancelled(true);
                 }
+                e.getView().getPlayer().sendMessage("You do not have permission for that.");
             }
         }
     }

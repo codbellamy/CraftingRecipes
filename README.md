@@ -1,6 +1,7 @@
 # CraftingRecipes
 ## Features
 - Custom crafting recipes for mob spawners and spawner eggs
+- Toggle spawners by interacting with them
 - Tweak to experience gained (+2.0x)
 ## Installation
 - Place Crafting.jar into 'plugins' folder
