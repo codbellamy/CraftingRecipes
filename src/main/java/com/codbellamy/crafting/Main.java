@@ -27,7 +27,10 @@ public class Main extends JavaPlugin{
             "wither_skeleton_egg",
             "magma_cube_egg",
             "evoker_egg",
-            "slime_egg"
+            "slime_egg",
+            "iron_golem_egg",
+            "phantom_egg",
+            "drowned_egg"
     };
     public static final Material[][] CRAFTING = {
             {Material.SPIDER_EYE,               Material.SPIDER_SPAWN_EGG},
@@ -45,7 +48,10 @@ public class Main extends JavaPlugin{
             {Material.WITHER_SKELETON_SKULL,    Material.WITHER_SKELETON_SPAWN_EGG},
             {Material.MAGMA_CREAM,              Material.MAGMA_CUBE_SPAWN_EGG},
             {Material.TOTEM_OF_UNDYING,         Material.EVOKER_SPAWN_EGG},
-            {Material.SLIME_BALL,               Material.SLIME_SPAWN_EGG}
+            {Material.SLIME_BALL,               Material.SLIME_SPAWN_EGG},
+            {Material.IRON_BLOCK,               Material.IRON_GOLEM_SPAWN_EGG},
+            {Material.PHANTOM_MEMBRANE,         Material.PHANTOM_SPAWN_EGG},
+            {Material.TRIDENT,                  Material.DROWNED_SPAWN_EGG}
     };
     @Override
     public void onEnable(){

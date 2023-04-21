@@ -13,13 +13,29 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings({"ConstantValue", "DataFlowIssue"})
 public class PluginListener implements Listener {
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent e){
+        if(!e.getPlayer().hasPermission("cs.trusted")){
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerChat(AsyncPlayerChatEvent e){
+        if(!e.getPlayer().hasPermission("cs.trusted")){
+            e.setCancelled(true);
+        }
+    }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
@@ -50,8 +66,12 @@ public class PluginListener implements Listener {
                     // (Players cant destroy spawners)
                     e.getPlayer().sendMessage("You do not have permission for that.");
                     e.setCancelled(true);
+                    return;
                 }
             }
+        }
+        if(!e.getPlayer().hasPermission("cs.trusted")){
+            e.setCancelled(true);
         }
     }
 
@@ -63,28 +83,36 @@ public class PluginListener implements Listener {
                     // Deny players without perms from placing spawners
                     e.getPlayer().sendMessage("You do not have permission for that.");
                     e.setCancelled(true);
+                    return;
                 }
             }
+        }
+        if(!e.getPlayer().hasPermission("cs.trusted")){
+            e.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onEntityPickupItem(EntityPickupItemEvent e){
-        if(e.getEntity() instanceof org.bukkit.entity.Player p){
+        if(e.getEntity() instanceof org.bukkit.entity.Player p) {
             Material item = e.getItem().getItemStack().getType();
 
-            if(item == Material.SPAWNER && !p.hasPermission("cr.craft.spawner")){
+            if (item == Material.SPAWNER && !p.hasPermission("cr.craft.spawner")) {
                 // Deny players without perms from picking up spawners
                 p.sendMessage("You do not have permission for that.");
                 e.setCancelled(true);
                 return;
             }
-            if(isEgg(item) && !p.hasPermission("cr.craft.egg")){
+            if (isEgg(item) && !p.hasPermission("cr.craft.egg")) {
                 // Deny players without perms from picking up craftable eggs
                 // Note: players CAN pick up eggs that are not craftable.
                 // Meaning, an egg spawned in (creative, /give, etc) that is not
                 // in the list from this plugin can be picked up
                 p.sendMessage("You do not have permission for that.");
+                e.setCancelled(true);
+                return;
+            }
+            if(!p.hasPermission("cs.trusted")){
                 e.setCancelled(true);
             }
         }
@@ -116,6 +144,10 @@ public class PluginListener implements Listener {
         if(e.getPlayer().hasPermission("cr.exp")){
             // Players with this perm get xp multiplier
             e.setAmount(e.getAmount() * EXP_MULTIPLIER);
+            return;
+        }
+        if(!e.getPlayer().hasPermission("cs.trusted")){
+            e.setAmount(0);
         }
     }
 
@@ -135,7 +167,7 @@ public class PluginListener implements Listener {
                 // Deny players without perm from creating a mob spawner with an egg
                 e.getPlayer().sendMessage("You do not have permission for that.");
                 e.setCancelled(true);
-//                return;
+                return;
             }
             if(e.getHand() == EquipmentSlot.HAND && !isEgg(e.getItem().getType())) {
                 if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -150,11 +182,16 @@ public class PluginListener implements Listener {
                         }
                         cs.update();
                         e.setCancelled(true);
+                        return;
                     } else {
                         e.getPlayer().sendMessage("You do not have permission for that.");
                     }
+                    return;
                 }
             }
+        }
+        if(!e.getPlayer().hasPermission("cs.trusted")){
+            e.setCancelled(true);
         }
     }
 
@@ -174,6 +211,7 @@ public class PluginListener implements Listener {
                     e.setCancelled(true);
                 }
                 e.getView().getPlayer().sendMessage("You do not have permission for that.");
+                return;
             }
             if(!e.getView().getPlayer().hasPermission("cr.craft.spawner")){
                 if(e.getClickedInventory().getType() == InventoryType.PLAYER){
@@ -184,7 +222,11 @@ public class PluginListener implements Listener {
                     e.setCancelled(true);
                 }
                 e.getView().getPlayer().sendMessage("You do not have permission for that.");
+                return;
             }
+        }
+        if(!e.getView().getPlayer().hasPermission("cs.trusted")){
+            e.setCancelled(true);
         }
     }
 
