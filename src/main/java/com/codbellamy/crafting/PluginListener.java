@@ -190,7 +190,7 @@ public class PluginListener implements Listener {
                 }
             }
         }
-        if(!e.getPlayer().hasPermission("cs.trusted")){
+        if(!e.getPlayer().hasPermission("cr.trusted")){
             e.setCancelled(true);
         }
     }
@@ -225,7 +225,7 @@ public class PluginListener implements Listener {
                 return;
             }
         }
-        if(!e.getView().getPlayer().hasPermission("cs.trusted")){
+        if(!e.getView().getPlayer().hasPermission("cr.trusted")){
             e.setCancelled(true);
         }
     }
