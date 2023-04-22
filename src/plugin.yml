@@ -20,7 +20,7 @@ permissions:
   cr.craft.spawner:
     description: Gives a player permission to craft a blank spawner
   cr.exp:
-    description: 1.5x xp multiplier
+    description: 2x xp multiplier
   cr.create:
     description: Gives a player permission to use a spawn egg on a spawner
   cr.trusted:

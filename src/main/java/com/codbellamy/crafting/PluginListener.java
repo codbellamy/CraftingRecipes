@@ -25,14 +25,14 @@ public class PluginListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e){
-        if(!e.getPlayer().hasPermission("cs.trusted")){
+        if(!e.getPlayer().hasPermission("cr.trusted")){
             e.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e){
-        if(!e.getPlayer().hasPermission("cs.trusted")){
+        if(!e.getPlayer().hasPermission("cr.trusted")){
             e.setCancelled(true);
         }
     }
@@ -70,7 +70,7 @@ public class PluginListener implements Listener {
                 }
             }
         }
-        if(!e.getPlayer().hasPermission("cs.trusted")){
+        if(!e.getPlayer().hasPermission("cr.trusted")){
             e.setCancelled(true);
         }
     }
@@ -87,7 +87,7 @@ public class PluginListener implements Listener {
                 }
             }
         }
-        if(!e.getPlayer().hasPermission("cs.trusted")){
+        if(!e.getPlayer().hasPermission("cr.trusted")){
             e.setCancelled(true);
         }
     }
@@ -112,7 +112,7 @@ public class PluginListener implements Listener {
                 e.setCancelled(true);
                 return;
             }
-            if(!p.hasPermission("cs.trusted")){
+            if(!p.hasPermission("cr.trusted")){
                 e.setCancelled(true);
             }
         }
@@ -146,7 +146,7 @@ public class PluginListener implements Listener {
             e.setAmount(e.getAmount() * EXP_MULTIPLIER);
             return;
         }
-        if(!e.getPlayer().hasPermission("cs.trusted")){
+        if(!e.getPlayer().hasPermission("cr.trusted")){
             e.setAmount(0);
         }
     }
