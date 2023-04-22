@@ -4,19 +4,19 @@ import org.bukkit.Material;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
@@ -24,24 +24,10 @@ import org.bukkit.inventory.ItemStack;
 public class PluginListener implements Listener {
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent e){
-        if(!e.getPlayer().hasPermission("cr.trusted")){
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent e){
-        if(!e.getPlayer().hasPermission("cr.trusted")){
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
         if(e.getBlock().getType() == Material.SPAWNER) {
             if (e.getPlayer().getType() == EntityType.PLAYER) {
-                if(e.getPlayer().hasPermission("cr.craft.spawner")) {
+                if(e.getPlayer().hasPermission("cr.mine")) {
 
                     ItemStack equipped = e.getPlayer().getInventory().getItemInMainHand();
                     if (equipped.getType() == Material.DIAMOND_PICKAXE ||
@@ -66,12 +52,8 @@ public class PluginListener implements Listener {
                     // (Players cant destroy spawners)
                     e.getPlayer().sendMessage("You do not have permission for that.");
                     e.setCancelled(true);
-                    return;
                 }
             }
-        }
-        if(!e.getPlayer().hasPermission("cr.trusted")){
-            e.setCancelled(true);
         }
     }
 
@@ -83,12 +65,8 @@ public class PluginListener implements Listener {
                     // Deny players without perms from placing spawners
                     e.getPlayer().sendMessage("You do not have permission for that.");
                     e.setCancelled(true);
-                    return;
                 }
             }
-        }
-        if(!e.getPlayer().hasPermission("cr.trusted")){
-            e.setCancelled(true);
         }
     }
 
@@ -109,10 +87,6 @@ public class PluginListener implements Listener {
                 // Meaning, an egg spawned in (creative, /give, etc) that is not
                 // in the list from this plugin can be picked up
                 p.sendMessage("You do not have permission for that.");
-                e.setCancelled(true);
-                return;
-            }
-            if(!p.hasPermission("cr.trusted")){
                 e.setCancelled(true);
             }
         }
@@ -144,10 +118,6 @@ public class PluginListener implements Listener {
         if(e.getPlayer().hasPermission("cr.exp")){
             // Players with this perm get xp multiplier
             e.setAmount(e.getAmount() * EXP_MULTIPLIER);
-            return;
-        }
-        if(!e.getPlayer().hasPermission("cr.trusted")){
-            e.setAmount(0);
         }
     }
 
@@ -182,16 +152,11 @@ public class PluginListener implements Listener {
                         }
                         cs.update();
                         e.setCancelled(true);
-                        return;
                     } else {
                         e.getPlayer().sendMessage("You do not have permission for that.");
                     }
-                    return;
                 }
             }
-        }
-        if(!e.getPlayer().hasPermission("cr.trusted")){
-            e.setCancelled(true);
         }
     }
 
@@ -222,10 +187,15 @@ public class PluginListener implements Listener {
                     e.setCancelled(true);
                 }
                 e.getView().getPlayer().sendMessage("You do not have permission for that.");
-                return;
             }
         }
-        if(!e.getView().getPlayer().hasPermission("cr.trusted")){
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent e){
+        if(e.getEntity() instanceof Villager v){
+            v.setInvulnerable(true);
+            v.setHealth(20);
             e.setCancelled(true);
         }
     }

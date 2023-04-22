@@ -78,6 +78,7 @@ public class Main extends JavaPlugin{
 
         // Register event handler
         getServer().getPluginManager().registerEvents(new PluginListener(), this);
+        getServer().getPluginManager().registerEvents(new UntrustedListener(), this);
         Bukkit.getLogger().info(String.format("[" + this.getName() + "] " + "Registered listener.", KEYS.length));
     }
 
