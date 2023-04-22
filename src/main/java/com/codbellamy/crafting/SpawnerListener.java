@@ -4,13 +4,11 @@ import org.bukkit.Material;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -21,7 +19,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings({"ConstantValue", "DataFlowIssue"})
-public class PluginListener implements Listener {
+public class SpawnerListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
@@ -77,7 +75,6 @@ public class PluginListener implements Listener {
 
             if (item == Material.SPAWNER && !p.hasPermission("cr.craft.spawner")) {
                 // Deny players without perms from picking up spawners
-                p.sendMessage("You do not have permission for that.");
                 e.setCancelled(true);
                 return;
             }
@@ -86,7 +83,6 @@ public class PluginListener implements Listener {
                 // Note: players CAN pick up eggs that are not craftable.
                 // Meaning, an egg spawned in (creative, /give, etc) that is not
                 // in the list from this plugin can be picked up
-                p.sendMessage("You do not have permission for that.");
                 e.setCancelled(true);
             }
         }
@@ -191,21 +187,12 @@ public class PluginListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onEntityDamage(EntityDamageEvent e){
-        if(e.getEntity() instanceof Villager v){
-            v.setInvulnerable(true);
-            v.setHealth(20);
-            e.setCancelled(true);
-        }
-    }
-
     // Returns true if 'material' has a defined recipe from within this plugin
     // Recipes located at Main.CRAFTING
     private boolean isEgg(Material material){
         boolean flag = false;
 
-        for (Material[] m : Main.CRAFTING) {
+        for (Material[] m : Recipes.CRAFTING) {
             flag |= material == m[1];
         }
         return flag;

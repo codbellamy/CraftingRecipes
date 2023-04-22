@@ -9,55 +9,28 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@SuppressWarnings("unused")
 public class Main extends JavaPlugin{
-
-    public static final String[] KEYS = {
-            "spider_egg",
-            "zombie_egg",
-            "creeper_egg",
-            "cave_spider_egg",
-            "villager_egg",
-            "blaze_egg",
-            "chicken_egg",
-            "cow_egg",
-            "pig_egg",
-            "ghast_egg",
-            "wither_egg",
-            "skeleton_egg",
-            "wither_skeleton_egg",
-            "magma_cube_egg",
-            "evoker_egg",
-            "slime_egg",
-            "iron_golem_egg",
-            "phantom_egg",
-            "drowned_egg",
-            "sheep_egg"
-    };
-    public static final Material[][] CRAFTING = {
-            {Material.SPIDER_EYE,               Material.SPIDER_SPAWN_EGG},
-            {Material.ROTTEN_FLESH,             Material.ZOMBIE_SPAWN_EGG},
-            {Material.GUNPOWDER,                Material.CREEPER_SPAWN_EGG},
-            {Material.FERMENTED_SPIDER_EYE,     Material.CAVE_SPIDER_SPAWN_EGG},
-            {Material.EMERALD,                  Material.VILLAGER_SPAWN_EGG},
-            {Material.BLAZE_ROD,                Material.BLAZE_SPAWN_EGG},
-            {Material.CHICKEN,                  Material.CHICKEN_SPAWN_EGG},
-            {Material.BEEF,                     Material.COW_SPAWN_EGG},
-            {Material.PORKCHOP,                 Material.PIG_SPAWN_EGG},
-            {Material.GHAST_TEAR,               Material.GHAST_SPAWN_EGG},
-            {Material.NETHER_STAR,              Material.WITHER_SPAWN_EGG},
-            {Material.BONE,                     Material.SKELETON_SPAWN_EGG},
-            {Material.WITHER_SKELETON_SKULL,    Material.WITHER_SKELETON_SPAWN_EGG},
-            {Material.MAGMA_CREAM,              Material.MAGMA_CUBE_SPAWN_EGG},
-            {Material.TOTEM_OF_UNDYING,         Material.EVOKER_SPAWN_EGG},
-            {Material.SLIME_BALL,               Material.SLIME_SPAWN_EGG},
-            {Material.IRON_BLOCK,               Material.IRON_GOLEM_SPAWN_EGG},
-            {Material.PHANTOM_MEMBRANE,         Material.PHANTOM_SPAWN_EGG},
-            {Material.TRIDENT,                  Material.DROWNED_SPAWN_EGG},
-            {Material.MUTTON,                   Material.SHEEP_SPAWN_EGG}
-    };
     @Override
     public void onEnable(){
+        // Create shaped recipes
+        createSpawnerRecipe();
+        Bukkit.getLogger().info("[" + this.getName() + "] " + "Loaded spawner recipe.");
 
+        // Create shapeless recipes
+        createEggRecipe();
+        Bukkit.getLogger().info(String.format("[" + this.getName() + "] " + "Loaded %d egg recipes.", Recipes.KEYS.length));
+
+        // Register event handler
+        getServer().getPluginManager().registerEvents(new SpawnerListener(), this);
+        getServer().getPluginManager().registerEvents(new UntrustedListener(), this);
+        getServer().getPluginManager().registerEvents(new VillagerListener(), this);
+        Bukkit.getLogger().info(String.format("[" + this.getName() + "] " + "Registered listeners.", Recipes.KEYS.length));
+    }
+
+    public void onDisable(){}
+
+    private void createSpawnerRecipe(){
         ShapedRecipe spawner =
                 new ShapedRecipe(
                         new NamespacedKey(this, "spawner"),
@@ -69,31 +42,18 @@ public class Main extends JavaPlugin{
                 .setIngredient('o', Material.ENDER_EYE)
                 .setIngredient('x', Material.IRON_BARS);
         this.getServer().addRecipe(spawner);
-
-        Bukkit.getLogger().info("[" + this.getName() + "] " + "Loaded spawner recipe.");
-
-        // Create shapeless recipes
-        createEggRecipe();
-        Bukkit.getLogger().info(String.format("[" + this.getName() + "] " + "Loaded %d egg recipes.", KEYS.length));
-
-        // Register event handler
-        getServer().getPluginManager().registerEvents(new PluginListener(), this);
-        getServer().getPluginManager().registerEvents(new UntrustedListener(), this);
-        Bukkit.getLogger().info(String.format("[" + this.getName() + "] " + "Registered listener.", KEYS.length));
     }
 
-    public void onDisable(){}
-
-    public void createEggRecipe(){
+    private void createEggRecipe(){
         ShapelessRecipe egg;
         Material input, output;
 
-        for (int i = 0; i < KEYS.length; i++){
-            input = CRAFTING[i][0];
-            output = CRAFTING[i][1];
+        for (int i = 0; i < Recipes.KEYS.length; i++){
+            input = Recipes.CRAFTING[i][0];
+            output = Recipes.CRAFTING[i][1];
             egg =
                     new ShapelessRecipe(
-                            new NamespacedKey(this, KEYS[i]),
+                            new NamespacedKey(this, Recipes.KEYS[i]),
                             new ItemStack(output, 1)
                     );
 

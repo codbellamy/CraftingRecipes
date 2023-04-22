@@ -76,6 +76,4 @@ public class UntrustedListener implements Listener {
             e.setCancelled(true);
         }
     }
-
-
 }
