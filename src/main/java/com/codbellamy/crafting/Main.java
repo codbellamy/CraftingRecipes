@@ -42,6 +42,7 @@ public class Main extends JavaPlugin{
                 .setIngredient('o', Material.ENDER_EYE)
                 .setIngredient('x', Material.IRON_BARS);
         this.getServer().addRecipe(spawner);
+        Recipes.spawner = spawner;
     }
 
     private void createEggRecipe(){
@@ -60,9 +61,10 @@ public class Main extends JavaPlugin{
             egg.setCategory(CraftingBookCategory.MISC);
             egg.setGroup("spawn_egg");
             egg = egg.addIngredient(1, input)
-                    .addIngredient(1, Material.AMETHYST_SHARD)
+                    .addIngredient(1, Material.ECHO_SHARD)
                     .addIngredient(1, Material.EGG);
             this.getServer().addRecipe(egg);
+            Recipes.eggs.add(egg);
         }
     }
 }

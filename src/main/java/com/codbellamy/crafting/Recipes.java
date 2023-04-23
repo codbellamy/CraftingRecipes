@@ -1,6 +1,11 @@
 package com.codbellamy.crafting;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Recipes {
 
@@ -50,4 +55,6 @@ public class Recipes {
             {Material.MUTTON,                   Material.SHEEP_SPAWN_EGG},
             {Material.SHULKER_SHELL,            Material.SHULKER_SPAWN_EGG}
     };
+    public static List<ShapelessRecipe> eggs = new ArrayList<>();
+    public static ShapedRecipe spawner;
 }
