@@ -25,6 +25,7 @@ public class Main extends JavaPlugin{
         getServer().getPluginManager().registerEvents(new SpawnerListener(), this);
         getServer().getPluginManager().registerEvents(new UntrustedListener(), this);
         getServer().getPluginManager().registerEvents(new VillagerListener(), this);
+        getServer().getPluginManager().registerEvents(new RecipeListener(), this);
         Bukkit.getLogger().info(String.format("[" + this.getName() + "] " + "Registered listeners.", Recipes.KEYS.length));
     }
 

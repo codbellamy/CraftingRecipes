@@ -17,7 +17,6 @@ import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapelessRecipe;
 
 @SuppressWarnings({"ConstantValue", "DataFlowIssue"})
 public class SpawnerListener implements Listener {
@@ -88,18 +87,6 @@ public class SpawnerListener implements Listener {
                     // Meaning, an egg spawned in (creative, /give, etc) that is not
                     // in the list from this plugin can be picked up
                     e.setCancelled(true);
-                    return;
-                }
-            }
-            if(item == Material.IRON_BARS || item == Material.ENDER_EYE) {
-                if(p.hasDiscoveredRecipe(Recipes.spawner.getKey())) return;
-                p.discoverRecipe(Recipes.spawner.getKey());
-                return;
-            }
-            if(item == Material.EGG || item == Material.ECHO_SHARD){
-                for(ShapelessRecipe s : Recipes.eggs){
-                    if (p.hasDiscoveredRecipe(s.getKey())) continue;
-                    p.discoverRecipe(s.getKey());
                 }
             }
         }

@@ -30,7 +30,8 @@ public class Recipes {
             "phantom_egg",
             "drowned_egg",
             "sheep_egg",
-            "shulker_egg"
+            "shulker_egg",
+            "rabbit_egg"
     };
     public static final Material[][] CRAFTING = {
             {Material.SPIDER_EYE,               Material.SPIDER_SPAWN_EGG},
@@ -53,8 +54,17 @@ public class Recipes {
             {Material.PHANTOM_MEMBRANE,         Material.PHANTOM_SPAWN_EGG},
             {Material.TRIDENT,                  Material.DROWNED_SPAWN_EGG},
             {Material.MUTTON,                   Material.SHEEP_SPAWN_EGG},
-            {Material.SHULKER_SHELL,            Material.SHULKER_SPAWN_EGG}
+            {Material.SHULKER_SHELL,            Material.SHULKER_SPAWN_EGG},
+            {Material.RABBIT_FOOT,              Material.RABBIT_SPAWN_EGG}
     };
     public static List<ShapelessRecipe> eggs = new ArrayList<>();
     public static ShapedRecipe spawner;
+
+    public static List<Material> getCraftingColumn(int col){
+        List<Material> out = new ArrayList<>();
+        for (Material[] materials : CRAFTING) {
+            out.add(materials[col]);
+        }
+        return out;
+    }
 }
